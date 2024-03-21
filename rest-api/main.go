@@ -14,5 +14,5 @@ func main() {
 
 	routes.RegisterRoutes(router)
 
-	router.Run("localhost:8081")
+	router.Run("0.0.0.0:8081")
 }
