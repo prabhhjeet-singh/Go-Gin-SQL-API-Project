@@ -33,12 +33,15 @@ func postEvent(c *gin.Context) {
 		return
 	}
 
-	err := utils.VerifyToken(token)
+	err, userId := utils.VerifyToken(token)
 
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Not Authorized", "error": err})
 		return
 	}
+
+	// get userID from token
+	newEvent.UserId = userId
 
 	models.Save(newEvent)
 	c.JSON(http.StatusCreated, newEvent)
