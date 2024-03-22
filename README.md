@@ -66,3 +66,17 @@ Content-Type: application/json
     "password":"passwod"
 }
 ```
+## Steps to build
+Option 1
+1. Clone the repository
+2. ```bash
+   cd rest-api
+   go run .
+   ```
+Option 2 - Using Docker
+```bash
+docker build -t go-api .
+docker run -p 8081:8081 go-api
+```
+
+The API will be available at localhost:8081
