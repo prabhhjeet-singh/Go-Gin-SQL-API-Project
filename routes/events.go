@@ -1,11 +1,11 @@
 package routes
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 
 	"example.com/rest-api/models"
+	"example.com/rest-api/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +13,6 @@ func getEvent(c *gin.Context) {
 	events, err := models.GetAllEvents()
 
 	if err != nil {
-		log.Fatal("Could not fetch events:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch, try again later"})
 	}
 
@@ -24,6 +23,20 @@ func postEvent(c *gin.Context) {
 	var newEvent models.Event
 
 	if err := c.BindJSON(&newEvent); err != nil {
+		return
+	}
+
+	token := c.GetHeader("Authorization")
+
+	if token == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "No Authentication Token"})
+		return
+	}
+
+	err := utils.VerifyToken(token)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Not Authorized", "error": err})
 		return
 	}
 

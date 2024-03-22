@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"example.com/rest-api/models"
+	"example.com/rest-api/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,7 +33,7 @@ func userLogin(c *gin.Context) {
 		return
 	}
 
-	err, comp := models.UserLogin(user)
+	err, comp, id := models.UserLogin(user)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
@@ -40,7 +41,14 @@ func userLogin(c *gin.Context) {
 	}
 
 	if comp {
-		c.JSON(http.StatusFound, gin.H{"message": "Login Successful"})
+
+		token, err := utils.GenerateToken(user.Email, id)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		}
+
+		c.JSON(http.StatusFound, gin.H{"message": "Login Successful", "token": token})
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Wrong Credentials"})
 	}

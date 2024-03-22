@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 
 	"example.com/rest-api/db"
 	"example.com/rest-api/utils"
@@ -29,7 +28,6 @@ func UserSignup(user User) error {
 	defer stmt.Close()
 
 	hashedPassword, err := utils.HashPassword(user.Password)
-	fmt.Println(hashedPassword)
 
 	if err != nil {
 		return err
@@ -44,16 +42,17 @@ func UserSignup(user User) error {
 	return err
 }
 
-func UserLogin(user User) (error, bool) {
+func UserLogin(user User) (error, bool, int) {
 	var password string
+	var id int
 
-	query := "SELECT password FROM users WHERE email = ?"
+	query := "SELECT id, password FROM users WHERE email = ?"
 
-	if err := db.DB.QueryRow(query, user.Email).Scan(&password); err != nil {
-		return errors.New("wrong password"), false
+	if err := db.DB.QueryRow(query, user.Email).Scan(&id, &password); err != nil {
+		return errors.New("wrong credentials"), false, 0
 	}
 
 	comp := utils.CheckPasswordHash(user.Password, password)
 
-	return nil, comp
+	return nil, comp, id
 }
