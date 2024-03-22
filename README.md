@@ -22,6 +22,7 @@ A mock **Event Registration** project for practicing building API with Golang, G
 ```http
 POST http://localhost:8081/events 
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsIR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJleHAiOjE3MTEwOTc1MTMsInVzZXJJZCI6MX0.LOGdTys5GHb3jojm2sOy0CrImkq5RzR1UgyWvvASIIU
 
 {
     "name": "Test event",
