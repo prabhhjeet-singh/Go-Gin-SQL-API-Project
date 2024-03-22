@@ -10,7 +10,7 @@ A mock **Event Registration** project for practicing building API with Golang, G
 7. POST("/login")
 
 ### In Process...
-1. JWT Implementation
+1. JWT Implementation (Completed)
 2. Authorization
 3. Cancelling Registrations
 
