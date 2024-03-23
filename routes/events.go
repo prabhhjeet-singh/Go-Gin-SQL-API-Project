@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"example.com/rest-api/models"
-	"example.com/rest-api/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,21 +25,7 @@ func postEvent(c *gin.Context) {
 		return
 	}
 
-	token := c.GetHeader("Authorization")
-
-	if token == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "No Authentication Token"})
-		return
-	}
-
-	err, userId := utils.VerifyToken(token)
-
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "Not Authorized", "error": err})
-		return
-	}
-
-	// get userID from token
+	userId := c.GetInt("userId")
 	newEvent.UserId = userId
 
 	models.Save(newEvent)
