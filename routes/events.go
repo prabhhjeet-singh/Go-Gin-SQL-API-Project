@@ -99,6 +99,19 @@ func deleteEvent(c *gin.Context) {
 		return
 	}
 
+	// compare eventID with userID
+	event, err := models.GetEventByID(id)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "Could not find event"})
+		return
+	}
+
+	if event.UserId != c.GetInt("userId") {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "User not authorized"})
+		return
+	}
+
 	err = models.Delete(id)
 
 	if err != nil {
