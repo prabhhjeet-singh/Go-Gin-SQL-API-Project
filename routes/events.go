@@ -60,7 +60,13 @@ func updateEvent(c *gin.Context) {
 		return
 	}
 
-	_, err = models.GetEventByID(id)
+	// compare eventID with userID
+	event, err := models.GetEventByID(id)
+
+	if event.UserId != c.GetInt("userId") {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "User not authorized"})
+		return
+	}
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch event"})
